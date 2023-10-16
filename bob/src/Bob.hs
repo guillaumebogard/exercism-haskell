@@ -1,18 +1,22 @@
 module Bob (responseFor) where
 
+import Data.Text ( Text,
+                   pack,
+                   unpack
+                 )
 import Data.Char ( isSpace,
                    isUpper,
                    isLower
                  )
 
-responseFor :: String -> String
+responseFor :: Text -> Text
 responseFor x
-    | null noSpaces = "Fine. Be that way!"
-    | isQuestion && isYelling = "Calm down, I know what I'm doing!"
-    | isQuestion = "Sure."
-    | isYelling = "Whoa, chill out!"
-    | otherwise = "Whatever."
+    | null noSpaces           = pack "Fine. Be that way!"
+    | isQuestion && isYelling = pack "Calm down, I know what I'm doing!"
+    | isQuestion              = pack "Sure."
+    | isYelling               = pack "Whoa, chill out!"
+    | otherwise               = pack "Whatever."
     where
-        noSpaces = filter (not . isSpace) x
-        isQuestion = last noSpaces == '?'
-        isYelling = any isUpper noSpaces && not (any isLower noSpaces)
+        noSpaces              = filter (not . isSpace) $ unpack x
+        isQuestion            = last noSpaces == '?'
+        isYelling             = any isUpper noSpaces && not (any isLower noSpaces)
