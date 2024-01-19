@@ -17,7 +17,12 @@ newtype Resistor = Resistor { bands :: (Color, Color, Color) }
   deriving Show
 
 label :: Resistor -> String
-label (Resistor (ten, unit, zeros)) = show ((fromEnum ten * 10 + fromEnum unit) * 10 ^ fromEnum zeros) ++ " ohms"
+label (Resistor (ten, unit, zeros)) = let (value, measurement_unit) = label' ((fromEnum ten * 10 + fromEnum unit) * 10 ^ fromEnum zeros) in value ++ " " ++ measurement_unit
+
+label' :: Int -> (String, String)
+label' value
+  | value `div` 1000    > 1 = (show (value `div` 1000), "kiloohms")
+  | otherwise               = (show  value            , "ohms"    )
 
 ohms :: Resistor -> Int
 ohms resistor = error "You need to implement this function."
