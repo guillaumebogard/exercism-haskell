@@ -27,4 +27,4 @@ label' value
   | otherwise                  = (show  value                  , "ohms"    )
 
 ohms :: Resistor -> Int
-ohms resistor = error "You need to implement this function."
+ohms (Resistor (ten, unit, zeros)) = (fromEnum ten * 10 + fromEnum unit) * 10 ^ fromEnum zeros
