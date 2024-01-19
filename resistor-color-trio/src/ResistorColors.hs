@@ -21,8 +21,10 @@ label (Resistor (ten, unit, zeros)) = let (value, measurement_unit) = label' ((f
 
 label' :: Int -> (String, String)
 label' value
-  | value `div` 1000    > 1 = (show (value `div` 1000), "kiloohms")
-  | otherwise               = (show  value            , "ohms"    )
+  | value `div` 1000000000 > 1 = (show (value `div` 1000000000), "gigaohms")
+  | value `div` 1000000    > 1 = (show (value `div` 1000000   ), "megaohms")
+  | value `div` 1000       > 1 = (show (value `div` 1000      ), "kiloohms")
+  | otherwise                  = (show  value                  , "ohms"    )
 
 ohms :: Resistor -> Int
 ohms resistor = error "You need to implement this function."
