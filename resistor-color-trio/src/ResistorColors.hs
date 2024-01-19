@@ -1,4 +1,13 @@
-module ResistorColors (Color(..), Resistor(..), label, ohms) where
+module           ResistorColors  ( Color(..),
+                                   Resistor(..),
+                                   label,
+                                   ohms
+                                 ) where
+
+import qualified Data.Text as DT ( Text,
+                                   pack
+                                 )
+
 
 data Color =
     Black
@@ -16,15 +25,17 @@ data Color =
 newtype Resistor = Resistor { bands :: (Color, Color, Color) }
   deriving Show
 
-label :: Resistor -> String
-label (Resistor (ten, unit, zeros)) = let (value, measurement_unit) = label' ((fromEnum ten * 10 + fromEnum unit) * 10 ^ fromEnum zeros) in value ++ " " ++ measurement_unit
+label :: Resistor -> DT.Text
+label resistor =
+  let (value, measurement_unit) = (formatOhms . ohms) resistor
+    in DT.pack $ show value ++ " " ++ measurement_unit
 
-label' :: Int -> (String, String)
-label' value
-  | value `div` 1000000000 > 1 = (show (value `div` 1000000000), "gigaohms")
-  | value `div` 1000000    > 1 = (show (value `div` 1000000   ), "megaohms")
-  | value `div` 1000       > 1 = (show (value `div` 1000      ), "kiloohms")
-  | otherwise                  = (show  value                  , "ohms"    )
+formatOhms :: Int -> (Int, String)
+formatOhms value
+  | value `div` 1000000000 > 1 = (value `div` 1000000000, "gigaohms")
+  | value `div` 1000000    > 1 = (value `div` 1000000   , "megaohms")
+  | value `div` 1000       > 1 = (value `div` 1000      , "kiloohms")
+  | otherwise                  = (value                 , "ohms"    )
 
 ohms :: Resistor -> Int
 ohms (Resistor (ten, unit, zeros)) = (fromEnum ten * 10 + fromEnum unit) * 10 ^ fromEnum zeros
